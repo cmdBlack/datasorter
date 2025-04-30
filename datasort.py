@@ -1,5 +1,15 @@
+"""
+Script to sort data(waterlevel, raingauge) of various station in Abra River Basin
+
+Author: Kaizer Macni
+"""
+
+
+
+
 import numpy as np
 import pandas as pd
+import pathlib
 from pandas import Series, DataFrame
 from tqdm import tqdm
 
@@ -16,7 +26,14 @@ station_number = {"BANTAY": "639992238167",
                   "QUIRINO": "639992238150"
                  }
 
-
+wl_datum = {"BANTAY": 29.63,
+            "DOLORES": 61.84,
+            "LAPAZ": 50.49,
+            "SANJULIAN": 100,
+            "LUBA-1": 100,
+            "DOLORES-1": 61.84,
+            "LAPAZ-1": 50.49
+            }
 
 error_list = ["wltimeout", "wlerror"]
 data = pd.read_csv("datalogs.csv", delimiter=';')
@@ -31,8 +48,8 @@ del frame["seqno"]
 
 
 frame = frame.dropna()
-
-
+frame2 = frame.copy()
+frame2["wl_data"] = 100
 
 def find_key_by_value(dictionary, target_value):
     """
@@ -51,16 +68,20 @@ def find_key_by_value(dictionary, target_value):
     return None
 
 
+for row in tqdm(frame2.recno):
 
+    if str(frame2.loc[row - 1]["nodeid"]) in station_number.values():
 
-for row in tqdm(frame.recno):
+        station_name = find_key_by_value(station_number, str(frame2.loc[row - 1]["nodeid"]))
+        csv_file = pathlib.Path("outputs/" + station_name + "-" + str(frame2.loc[row - 1]["logtype"]) + ".csv")
 
-    if str(frame.loc[row-1]["nodeid"]) in station_number.values():
-        station_name = find_key_by_value(station_number, str(frame.loc[row-1]["nodeid"]))
-        datarow = frame.loc[row-1].to_frame().T
-        #datarow.to_csv(str(frame.loc[row-1]["nodeid"]) + "-" +  str(frame.loc[row-1]["logtype"]) + ".csv", mode='a', header=False)
-        datarow.to_csv("outputs/" + station_name + "-" +  str(frame.loc[row-1]["logtype"]) + ".csv", mode='a', header=False)
+        if frame2.loc[row - 1]["logtype"] == 'wl':
+            frame2["wl_data"] = wl_datum[station_name] - frame2.loc[row - 1]["value"]
+        else:
+            frame2["wl_data"] = ""
 
-
+        datarow = frame2.loc[row - 1].to_frame().T
+        # datarow.to_csv(str(frame.loc[row-1]["nodeid"]) + "-" +  str(frame.loc[row-1]["logtype"]) + ".csv", mode='a', header=False)
+        datarow.to_csv(csv_file, mode='a', header=not csv_file.exists(), index=False)
 
 print("DONEs")
