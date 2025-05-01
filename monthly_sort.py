@@ -34,7 +34,6 @@ print("DONE")
 
 
 for csv in tqdm(csv_file_set):
-    print(csv)
     data_prev = pd.read_csv(csv)
     frame2 = pd.DataFrame(data_prev)
     del frame2["nodeid"]
