@@ -50,6 +50,7 @@ del frame["seqno"]
 frame = frame.dropna()
 frame2 = frame.copy()
 frame2["wl_data"] = 100
+frame2.drop_duplicates()
 
 def find_key_by_value(dictionary, target_value):
     """
