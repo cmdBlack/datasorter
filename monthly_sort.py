@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 import pathlib
+from datetime import datetime
 
 station = input("Station-stationtype: ")
 
@@ -31,8 +32,48 @@ for row in tqdm(range(len(frame.recno))):
 
 print("DONE")
 
+for csv in tqdm(csv_file_set):
+    data_prev = pd.read_csv(csv)
+    frame2 = pd.DataFrame(data_prev)
+
+    frame2["timestamp"] = pd.to_datetime(frame2["logtime"])
+    frame2.set_index('timestamp', inplace=True)
+    frame3 = frame2.copy()
+    del frame2["recno"]
+    del frame2["nodeid"]
+    del frame2["logtime"]
+    del frame2["logtype"]
+    del frame2["unit"]
+    del frame2["date"]
+    del frame2["time"]
+
+    if frame3['logtype'].iloc[0] == 'rr':
+        del frame2["wl_data"]
+        frame2 = frame2.resample('10min').sum()
+    else:
+        del frame2["value"]
+        frame2 = frame2.resample('10min').mean()
+
+    frame2['logtime'] = [item.strftime("%Y-%m-%d %H:%M:%S") for item in frame2.index]
+    frame2["date"] = frame2["logtime"].str.split(pat=" ", n=1, expand=True)[0]
+    frame2["time"] = frame2["logtime"].str.split(pat=" ", n=1, expand=True)[1]
+    del frame2['logtime']
+
+    if frame3['logtype'].iloc[0] == 'rr':
+        # del frame2["wl_data"]
+        # frame3 = frame2.pivot(index='time', columns='date', values='value')
+        frame4 = frame2.pivot_table(index='time', columns='date', values='value', aggfunc='first')
+        frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'monthly-table-')))
+    else:
+        # del frame2["value"]
+        # frame3 = frame2.pivot(index='time', columns='date', values='wl_data')
+        frame4 = frame2.pivot_table(index='time', columns='date', values='wl_data', aggfunc='first')
+        frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'monthly-table-')))
+print('done')
 
 
+
+"""
 for csv in tqdm(csv_file_set):
     data_prev = pd.read_csv(csv)
     frame2 = pd.DataFrame(data_prev)
@@ -53,7 +94,7 @@ for csv in tqdm(csv_file_set):
         frame3.to_csv(pathlib.Path(str(csv).replace('monthly-', 'monthly/monthly-table-')))
 print('done')
 
-
+"""
 
 
 """
@@ -76,5 +117,11 @@ def summarize(frame, csv_file):
 
 summarize(frame, csv_file)
 print("done")
+
+list_times = [f'{i:02d}:{j:02d}:00' for i in range(24) for j in range(0, 60, 10)]
+print(list_times)
+from datetime import datetime
+dates = pd.to_datetime(list_times, format='%H:%M:%S')
+dates.time
 """
 
