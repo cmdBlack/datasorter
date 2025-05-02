@@ -62,14 +62,26 @@ for csv in tqdm(csv_file_set):
     if frame3['logtype'].iloc[0] == 'rr':
         # del frame2["wl_data"]
         # frame3 = frame2.pivot(index='time', columns='date', values='value')
+        frame2['time'] = pd.to_datetime(frame2["time"], format='%H:%M:%S')
+        frame2['time'] = [item + pd.Timedelta(minutes=10) for item in frame2['time']]
+        frame2['time'] = [item.time() for item in frame2['time']]
+        frame2['time'] = [item.strftime("%H:%M:%S") for item in frame2['time']]
+        frame2['time'] = [item.replace('00:00:00', '24:00:00') for item in frame2['time']]
+
         frame4 = frame2.pivot_table(index='time', columns='date', values='value', aggfunc='first')
         frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'monthly-table-')))
     else:
         # del frame2["value"]
         # frame3 = frame2.pivot(index='time', columns='date', values='wl_data')
+        frame2['time'] = pd.to_datetime(frame2["time"], format='%H:%M:%S')
+        frame2['time'] = [item + pd.Timedelta(minutes=10) for item in frame2['time']]
+        frame2['time'] = [item.time() for item in frame2['time']]
+        frame2['time'] = [item.strftime("%H:%M:%S") for item in frame2['time']]
+        frame2['time'] = [item.replace('00:00:00', '24:00:00') for item in frame2['time']]
+
         frame4 = frame2.pivot_table(index='time', columns='date', values='wl_data', aggfunc='first')
         frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'monthly-table-')))
-print('done')
+print('DONE')
 
 
 
