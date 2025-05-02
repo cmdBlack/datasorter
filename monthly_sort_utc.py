@@ -1,6 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+"""
+
+Script to sort data(waterlevel, raingauge) of various station in Abra River Basin into monthly UTC (8AM-8AM)
+
+Author: Kaizer Macni
+
+"""
+
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -97,7 +105,7 @@ for csv_orig in csv_file_list:
             frame2['time'] = [item + pd.Timedelta(minutes=10) for item in frame2['time']]
             frame2['time'] = [item.time() for item in frame2['time']]
             frame2['time'] = [item.strftime("%H:%M:%S") for item in frame2['time']]
-            frame2['time'] = [item.replace('00:00:00', '24:00:00') for item in frame2['time']]
+            frame2['time'] = [item.replace('00:00:00', '24:00:00').replace(':', '')[:4] + 'Z' for item in frame2['time']]
 
             frame4 = frame2.pivot_table(index='time', columns='date', values='value', aggfunc='first')
             #frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-')))
@@ -109,7 +117,7 @@ for csv_orig in csv_file_list:
             frame2['time'] = [item + pd.Timedelta(minutes=10) for item in frame2['time']]
             frame2['time'] = [item.time() for item in frame2['time']]
             frame2['time'] = [item.strftime("%H:%M:%S") for item in frame2['time']]
-            frame2['time'] = [item.replace('00:00:00', '24:00:00') for item in frame2['time']]
+            frame2['time'] = [item.replace('00:00:00', '24:00:00').replace(':', '')[:4] + 'Z' for item in frame2['time']]
 
             frame4 = frame2.pivot_table(index='time', columns='date', values='wl_data', aggfunc='first')
             #frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-')))

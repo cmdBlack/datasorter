@@ -1,6 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+"""
+
+Script to sort data(waterlevel, raingauge) of various station in Abra River Basin into monthly
+
+Author: Kaizer Macni
+
+"""
+
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
