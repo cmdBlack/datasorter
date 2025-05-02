@@ -45,12 +45,12 @@ for csv in tqdm(csv_file_set):
         del frame2["wl_data"]
         #frame3 = frame2.pivot(index='time', columns='date', values='value')
         frame3 = frame2.pivot_table(index='time', columns='date', values='value', aggfunc='first')
-        frame3.to_csv(csv)
+        frame3.to_csv(pathlib.Path(str(csv).replace('monthly-', 'monthly/monthly-table-')))
     else:
         del frame2["value"]
         #frame3 = frame2.pivot(index='time', columns='date', values='wl_data')
         frame3 = frame2.pivot_table(index='time', columns='date', values='wl_data', aggfunc='first')
-        frame3.to_csv(csv)
+        frame3.to_csv(pathlib.Path(str(csv).replace('monthly-', 'monthly/monthly-table-')))
 print('done')
 
 
