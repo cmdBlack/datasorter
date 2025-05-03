@@ -17,6 +17,8 @@ from datetime import datetime
 import os
 import glob
 
+#import warnings
+#warnings.filterwarnings("ignore")  # Ignores all warnings
 
 def list_csv_files(folder_path):
     """
@@ -56,6 +58,7 @@ for csv_orig in csv_file_list:
     frame["timestamp"] = frame["timestamp"] - pd.to_timedelta(8, unit='h')
 
     csv_file_set_utc = set()
+    csv_file_set_utc_1 = set()
 
     # UTC
     for row in tqdm(range(len(frame.recno))):
@@ -108,8 +111,8 @@ for csv_orig in csv_file_list:
             frame2['time'] = [item.replace('00:00:00', '24:00:00').replace(':', '')[:4] + 'Z' for item in frame2['time']]
 
             frame4 = frame2.pivot_table(index='time', columns='date', values='value', aggfunc='first')
-            #frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-')))
-            frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-').replace('outputs/', 'outputs/monthly-table-utc/')))
+            frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-')))
+            #frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-').replace('outputs/', 'outputs/monthly-table-utc/')))
         else:
             # del frame2["value"]
             # frame3 = frame2.pivot(index='time', columns='date', values='wl_data')
@@ -120,8 +123,50 @@ for csv_orig in csv_file_list:
             frame2['time'] = [item.replace('00:00:00', '24:00:00').replace(':', '')[:4] + 'Z' for item in frame2['time']]
 
             frame4 = frame2.pivot_table(index='time', columns='date', values='wl_data', aggfunc='first')
-            #frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-')))
-            frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-').replace('outputs/', 'outputs/monthly-table-utc/')))
+            frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-')))
+            #frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-').replace('outputs/', 'outputs/monthly-table-utc/')))
+
+        csv_file_set_utc_1.add(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-')))
+
+
+    # UTC
+    for csv in tqdm(csv_file_set_utc_1):
+        data_prev = pd.read_csv(csv)
+        frame5 = pd.DataFrame(data_prev)
+
+        # create a list of days
+        m_day = [frame5.columns[1][:8] + str(x + 1) for x in range(31)]
+        m_day = pd.to_datetime(m_day, errors='coerce')
+        m_day = m_day.dropna()
+        m_day = [item.strftime("%Y-%m-%d") for item in m_day]
+
+        # create a list of time with interval of 10mins
+        list_10min = [f'{i:02d}:{j:02d}:00' for i in range(24) for j in range(0, 60, 10)]
+        list_10min = pd.to_datetime(list_10min, format='%H:%M:%S')
+        list_10min = [item + pd.Timedelta(minutes=10) for item in list_10min]
+        list_10min = [item.time() for item in list_10min]
+        list_10min = [item.strftime("%H:%M:%S") for item in list_10min]
+        list_10min = [item.replace('00:00:00', '24:00:00').replace(':', '')[:4] + 'Z' for item in list_10min]
+
+        frame6 = pd.DataFrame(index=list_10min, columns=m_day)  # create an empty dataframe with no values
+
+        frame5.set_index('time', inplace=True)
+
+        # temporary
+        # TODO
+        for x in frame5.index:
+            for y in frame5.columns:
+                #frame6.loc[x].loc[y] = frame5.loc[x].loc[y]
+                frame6.at[x, y] = frame5.loc[x].loc[y]
+
+        # frame7 = frame5.copy()
+        # frame8 = frame6.copy()
+
+        # frame7 = frame6.copy()
+        # frame7 = frame7.merge(frame5, how='right').set_index(frame6.index)
+        # frame7 = frame7.merge(frame5, how='right').reindex(frame6.index)
+        frame6.to_csv(csv)
+
 
 print('DONE')
 
