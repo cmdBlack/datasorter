@@ -71,6 +71,34 @@ def find_key_by_value(dictionary, target_value):
     return None
 
 
+for row in tqdm(frame2.index):
+    # for row in tqdm(range(len(frame2.recno))):
+    # row += 1
+    # print(row)
+    # print(type(frame.loc[row-1]))
+    # print(frame.loc[row-1]["nodeid"])
+    # print(frame.loc[row-1]["logtype"])
+    # print(frame.loc[row-1]["nodeid"] in station_number.values())
+    if str(frame2.loc[row]["nodeid"]) in station_number.values():
+
+        station_name = find_key_by_value(station_number, str(frame2.loc[row]["nodeid"]))
+        csv_file = pathlib.Path("outputs/" + station_name + "-" + str(frame2.loc[row]["logtype"]) + ".csv")
+
+        if frame2.loc[row]["logtype"] == 'wl':
+            frame2["wl_data"] = wl_datum[station_name] - frame2.loc[row]["value"]
+        else:
+            frame2["wl_data"] = ""
+
+        datarow = frame2.loc[row].to_frame().T
+        # datarow.to_csv(str(frame.loc[row-1]["nodeid"]) + "-" +  str(frame.loc[row-1]["logtype"]) + ".csv", mode='a', header=False)
+        datarow.to_csv(csv_file, mode='a', header=not csv_file.exists(), index=False)
+
+    # print(str(int((row-1)/len(frame.recno) * 100)) + '%')
+
+print("DONEs")
+
+
+"""
 for row in tqdm(frame2.recno):
 
     if str(frame2.loc[row - 1]["nodeid"]) in station_number.values():
@@ -88,3 +116,4 @@ for row in tqdm(frame2.recno):
         datarow.to_csv(csv_file, mode='a', header=not csv_file.exists(), index=False)
 
 print("DONEs")
+"""
