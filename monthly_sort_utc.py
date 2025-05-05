@@ -166,9 +166,18 @@ for csv_orig in csv_file_list:
         # frame7 = frame7.merge(frame5, how='right').set_index(frame6.index)
         # frame7 = frame7.merge(frame5, how='right').reindex(frame6.index)
         sum_lst = []
+        mean_lst = []
+        max_lst = []
+        min_lst = []
         for date in frame6.columns:
             sum_lst.append(frame6[date].sum())
+            mean_lst.append(frame6[date].mean())
+            max_lst.append(frame6[date].max())
+            min_lst.append(frame6[date].min())
         frame6.loc['SUM'] = sum_lst
+        frame6.loc['MEAN'] = mean_lst
+        frame6.loc['MAX'] = max_lst
+        frame6.loc['MIN'] = min_lst
 
         frame6.to_csv(csv)
 
