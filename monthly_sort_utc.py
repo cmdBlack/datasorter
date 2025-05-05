@@ -154,10 +154,10 @@ for csv_orig in csv_file_list:
 
         # temporary
         # TODO
-        for x in frame5.index:
-            for y in frame5.columns:
-                #frame6.loc[x].loc[y] = frame5.loc[x].loc[y]
-                frame6.at[x, y] = frame5.loc[x].loc[y]
+        for time in frame5.index:
+            for date in frame5.columns:
+                # frame6.loc[x].loc[y] = frame5.loc[x].loc[y]
+                frame6.at[time, date] = frame5.loc[time].loc[date]
 
         # frame7 = frame5.copy()
         # frame8 = frame6.copy()
@@ -165,6 +165,11 @@ for csv_orig in csv_file_list:
         # frame7 = frame6.copy()
         # frame7 = frame7.merge(frame5, how='right').set_index(frame6.index)
         # frame7 = frame7.merge(frame5, how='right').reindex(frame6.index)
+        sum_lst = []
+        for date in frame6.columns:
+            sum_lst.append(frame6[date].sum())
+        frame6.loc['SUM'] = sum_lst
+
         frame6.to_csv(csv)
 
 

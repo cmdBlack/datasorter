@@ -31,7 +31,7 @@ station_number = {"BANTAY": "639992238167",
 wl_datum = {"BANTAY": 29.63,
             "DOLORES": 61.84,
             "LAPAZ": 50.49,
-            "SANJULIAN": 100,
+            "SANJULIAN": 0,
             "LUBA-1": 100,
             "DOLORES-1": 61.84,
             "LAPAZ-1": 50.49
