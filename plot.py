@@ -21,7 +21,7 @@ def list_csv_files(folder_path):
 
 folder_path_wl = "outputs/monthly-table/waterlevel"
 folder_path_rr = "outputs/monthly-table/rainfall"
-wl_file_list = list_csv_files(folder_path)
+wl_file_list = list_csv_files(folder_path_wl)
 rr_file_list = list_csv_files(folder_path_rr)
 print(wl_file_list)
 print(rr_file_list)
