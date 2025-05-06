@@ -25,14 +25,14 @@ csv_file_list = list_csv_files(folder_path)
 rr_file_list = list_csv_files(folder_path_rr)
 print(csv_file_list)
 
-#os.mkdir("outputs/monthly-table/waterlevel/png")
-#os.mkdir("outputs/monthly-table/waterlevel/svg")
+os.mkdir("outputs/monthly-table/waterlevel/png")
+os.mkdir("outputs/monthly-table/waterlevel/svg")
 
 
 os.mkdir("outputs/monthly-table/rainfall/png")
 os.mkdir("outputs/monthly-table/rainfall/svg")
 
-"""
+
 for csv in tqdm(csv_file_list):
     data = pd.read_csv(csv)
     df = pd.DataFrame(data)
@@ -111,7 +111,7 @@ for csv in tqdm(csv_file_list):
     plt.close()
 
 
-"""
+
 
 
 for csv in tqdm(rr_file_list):
@@ -152,6 +152,10 @@ for csv in tqdm(rr_file_list):
     elif 'QUIRINO' in csv:
         title = 'QUIRINO RAINFALL'
         # title = 'SAN JULIAN WATERLEVEL' if 'wl' in csv else 'SAN JULIAN RAINFALL'
+
+    elif 'LAGAYAN' in csv:
+        title = 'LAGAYAN RAINFALL'
+
     else:
         title = 'RAINFALL'
         # alert += 0
