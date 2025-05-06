@@ -19,12 +19,12 @@ def list_csv_files(folder_path):
     csv_files = glob.glob(os.path.join(folder_path, "*.csv"))
     return csv_files
 
-folder_path = "outputs/waterlevel"
+folder_path = "outputs/monthly-table/waterlevel"
 csv_file_list = list_csv_files(folder_path)
 print(csv_file_list)
 
-os.mkdir("outputs/waterlevel/png")
-os.mkdir("outputs/waterlevel/svg")
+os.mkdir("outputs/monthly-table/waterlevel/png")
+os.mkdir("outputs/monthly-table/waterlevel/svg")
 
 for csv in tqdm(csv_file_list):
     data = pd.read_csv(csv)
@@ -99,8 +99,8 @@ for csv in tqdm(csv_file_list):
 
     plt.suptitle(title, y=0.92, fontsize='xx-large')
     # plt.show()
-    fig.savefig('outputs/waterlevel/svg/' + year_month + title + '.svg')
-    fig.savefig('outputs/waterlevel/png/' + year_month + title + '.png', dpi=400, bbox_inches='tight')
+    fig.savefig('outputs/monthly-table/waterlevel/svg/' + year_month + title + '.svg')
+    fig.savefig('outputs/monthly-table/waterlevel/png/' + year_month + title + '.png', dpi=400, bbox_inches='tight')
     plt.close()
 
 print("DONE")

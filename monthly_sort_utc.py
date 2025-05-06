@@ -20,6 +20,8 @@ import glob
 #import warnings
 #warnings.filterwarnings("ignore")  # Ignores all warnings
 
+os.mkdir('outputs/monthly-table')
+
 def list_csv_files(folder_path):
     """
     Lists all CSV files in a given folder path.
@@ -185,7 +187,8 @@ for csv_orig in csv_file_list:
         frame6.loc['MIN'] = min_lst
 
         frame6.to_csv(csv, index_label='time')
-
+        #frame6.to_csv(pathlib.Path(str(csv).replace('outputs/', 'outputs/monthly-table')), index_label='time'))
+        frame6.to_csv(pathlib.Path(str(csv).replace('outputs/', 'outputs/monthly-table/')), index_label='time')
 
 print('DONE')
 
