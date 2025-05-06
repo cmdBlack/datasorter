@@ -33,8 +33,8 @@ def list_csv_files(folder_path):
     csv_files = glob.glob(os.path.join(folder_path, "*.csv"))
     return csv_files
 
-# Example usage:
-folder_path = "outputs/"  # Replace with your folder path
+
+folder_path = "outputs/"
 csv_file_list = list_csv_files(folder_path)
 print(csv_file_list)
 
@@ -111,7 +111,7 @@ for csv_orig in csv_file_list:
             frame2['time'] = [item.replace('00:00:00', '24:00:00').replace(':', '')[:4] + 'Z' for item in frame2['time']]
 
             frame4 = frame2.pivot_table(index='time', columns='date', values='value', aggfunc='first')
-            frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-')))
+            frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-')), index_label='time')
             #frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-').replace('outputs/', 'outputs/monthly-table-utc/')))
         else:
             # del frame2["value"]
@@ -123,7 +123,7 @@ for csv_orig in csv_file_list:
             frame2['time'] = [item.replace('00:00:00', '24:00:00').replace(':', '')[:4] + 'Z' for item in frame2['time']]
 
             frame4 = frame2.pivot_table(index='time', columns='date', values='wl_data', aggfunc='first')
-            frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-')))
+            frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-')), index_label='time')
             #frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-').replace('outputs/', 'outputs/monthly-table-utc/')))
 
         csv_file_set_utc_1.add(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-')))
@@ -179,7 +179,7 @@ for csv_orig in csv_file_list:
         frame6.loc['MAX'] = max_lst
         frame6.loc['MIN'] = min_lst
 
-        frame6.to_csv(csv)
+        frame6.to_csv(csv, index_label='time')
 
 
 print('DONE')
