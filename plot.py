@@ -19,11 +19,12 @@ def list_csv_files(folder_path):
     csv_files = glob.glob(os.path.join(folder_path, "*.csv"))
     return csv_files
 
-folder_path = "outputs/monthly-table/waterlevel"
+folder_path_wl = "outputs/monthly-table/waterlevel"
 folder_path_rr = "outputs/monthly-table/rainfall"
-csv_file_list = list_csv_files(folder_path)
+wl_file_list = list_csv_files(folder_path)
 rr_file_list = list_csv_files(folder_path_rr)
-print(csv_file_list)
+print(wl_file_list)
+print(rr_file_list)
 
 os.mkdir("outputs/monthly-table/waterlevel/png")
 os.mkdir("outputs/monthly-table/waterlevel/svg")
@@ -33,7 +34,7 @@ os.mkdir("outputs/monthly-table/rainfall/png")
 os.mkdir("outputs/monthly-table/rainfall/svg")
 
 
-for csv in tqdm(csv_file_list):
+for csv in tqdm(wl_file_list):
     data = pd.read_csv(csv)
     df = pd.DataFrame(data)
     df.set_index('time', inplace=True)
