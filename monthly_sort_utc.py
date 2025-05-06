@@ -193,6 +193,80 @@ for csv_orig in csv_file_list:
 print('DONE')
 
 """
+csv = 'outputs/monthly-table/rainfall/monthly-table-rr-DOLORES-1-2024-09-utc.csv'
+data = pd.read_csv(csv)
+df = pd.DataFrame(data)
+df.set_index('time', inplace=True)
+df.drop(labels='SUM', inplace=True)
+df.drop(labels='MEAN', inplace=True)
+df.drop(labels='MAX', inplace=True)
+df.drop(labels='MIN', inplace=True)
+time_utc = list(df.index)
+
+# create a list of time with interval of 10mins
+list_10min = [f'{i:02d}:{j:02d}:00' for i in range(24) for j in range(0, 60, 10)]
+list_10min = pd.to_datetime(list_10min, format='%H:%M:%S')
+#list_10min = [item + pd.Timedelta(minutes=10) for item in list_10min]
+#list_10min = [item.time() for item in list_10min]
+#list_10min = [item.strftime("%H:%M:%S") for item in list_10min]
+#list_10min = [item.replace('00:00:00', '24:00:00').replace(':', '')[:4] + 'Z' for item in list_10min]
+df['time_10mins'] = list_10min
+df = df.resample('1h', on='time_10mins').sum()
+#df.index
+#year_month = df.columns[0][:8].replace('/', '-')
+
+year_month = df.columns[0][:8]
+
+if 'BANTAY' in csv:
+    title = 'BANTAY RAINFALL'
+    #title = 'BANTAY WATERLEVEL' if 'wl' in csv else 'BANTAY RAINFALL'
+elif 'DOLORES' in csv:
+    title = 'DOLORES RAINFALL'
+    # title = 'DOLORES WATERLEVEL' if 'wl' in csv else 'DOLORES RAINFALL'
+
+elif 'LUBA' in csv:
+    title = 'LUBA RAINFALL'
+    # title = 'LAPAZ WATERLEVEL' if 'wl' in csv else 'LAPAZ RAINFALL'
+
+elif 'QUIRINO' in csv:
+    title = 'QUIRINO RAINFALL'
+    # title = 'SAN JULIAN WATERLEVEL' if 'wl' in csv else 'SAN JULIAN RAINFALL'
+else:
+    title = 'RAINFALL'
+    #alert += 0
+    #alarm += 0
+    #critical += 0
+    #title = 'SAN JULIAN WATERLEVEL'
+
+# create the figure and axes
+fig1, axes1 = plt.subplots(6, int(np.ceil(len(df.columns) / 6)), figsize=(18, 18), sharex=True, sharey=True)
+
+# unpack all the axes subplots
+axe1 = axes1.ravel()
+
+# plt.title("BANTAY WATERLEVEL")
+# plt.ylabel("Calorie Burnage")
+
+# assign the plot to each subplot in axe
+for i, c in enumerate(df.columns):
+    #if 'wl' in csv:
+    #axe[i].plot(time_utc, alert, label=c)
+    df[c].plot(ax=axe1[i], kind='bar', color="blue")
+    #df[c].bar(ax=axe1[i])
+    # axe[i].legend(fontsize='small', loc='upper right')
+    axe1[i].legend(loc='upper center', bbox_to_anchor=(0.5, 1.15))
+    #else:
+    #   pass
+        # rr use bargraph
+
+plt.suptitle(title, y=0.92, fontsize='xx-large')
+plt.show()
+fig1.savefig('outputs/monthly-table/rainfall/svg/' + year_month + title + '.svg')
+fig1.savefig('outputs/monthly-table/rainfall/png/' + year_month + title + '.png', dpi=400, bbox_inches='tight')
+#plt.close()
+"""
+
+"""
 for csv in tqdm(csv_file_set):
     data_prev = pd.read_csv(csv)
     frame2 = pd.DataFrame(data_prev)
