@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
+#import matplotlib.ticker as ticker
 from tqdm import tqdm
 import os
 import glob
@@ -23,6 +23,9 @@ folder_path = "outputs/waterlevel"
 csv_file_list = list_csv_files(folder_path)
 print(csv_file_list)
 
+os.mkdir("outputs/waterlevel/png")
+os.mkdir("outputs/waterlevel/svg")
+
 for csv in tqdm(csv_file_list):
     data = pd.read_csv(csv)
     df = pd.DataFrame(data)
@@ -35,6 +38,7 @@ for csv in tqdm(csv_file_list):
     alert = np.zeros(len(df))
     alarm = np.zeros(len(df))
     critical = np.zeros(len(df))
+    #year_month = df.columns[0][:8].replace('/', '-')
     year_month = df.columns[0][:8]
 
     if 'BANTAY' in csv:
@@ -42,21 +46,33 @@ for csv in tqdm(csv_file_list):
         alarm += 7.5
         critical += 9.5
         title = 'BANTAY WATERLEVEL'
+        #title = 'BANTAY WATERLEVEL' if 'wl' in csv else 'BANTAY RAINFALL'
     elif 'DOLORES' in csv:
         alert += 53
         alarm += 54
         critical += 56
         title = 'DOLORES WATERLEVEL'
+        # title = 'DOLORES WATERLEVEL' if 'wl' in csv else 'DOLORES RAINFALL'
+
     elif 'LAPAZ' in csv:
         alert += 39
         alarm += 40
         critical += 42
         title = 'LAPAZ WATERLEVEL'
-    else:
+        # title = 'LAPAZ WATERLEVEL' if 'wl' in csv else 'LAPAZ RAINFALL'
+
+    elif 'SANJULIAN' in csv:
         alert += 0
         alarm += 0
         critical += 0
         title = 'SAN JULIAN WATERLEVEL'
+        # title = 'SAN JULIAN WATERLEVEL' if 'wl' in csv else 'SAN JULIAN RAINFALL'
+    else:
+        pass
+        #alert += 0
+        #alarm += 0
+        #critical += 0
+        #title = 'SAN JULIAN WATERLEVEL'
 
     # create the figure and axes
     fig, axes = plt.subplots(6, int(np.ceil(len(df.columns) / 6)), figsize=(18, 18), sharex=True, sharey=True)
@@ -69,14 +85,22 @@ for csv in tqdm(csv_file_list):
 
     # assign the plot to each subplot in axe
     for i, c in enumerate(df.columns):
+        #if 'wl' in csv:
+        #axe[i].plot(time_utc, alert, label=c)
         axe[i].plot(alert, color="yellow", linestyle="dashed")
         axe[i].plot(alarm, color="orange", linestyle="dashed")
         axe[i].plot(critical, color="red", linestyle="dashed")
         df[c].plot(ax=axe[i], color="blue")
         # axe[i].legend(fontsize='small', loc='upper right')
         axe[i].legend(loc='upper center', bbox_to_anchor=(0.5, 1.15))
+        #else:
+        #   pass
+            # rr use bargraph
 
     plt.suptitle(title, y=0.92, fontsize='xx-large')
     # plt.show()
     fig.savefig('outputs/waterlevel/svg/' + year_month + title + '.svg')
     fig.savefig('outputs/waterlevel/png/' + year_month + title + '.png', dpi=400, bbox_inches='tight')
+    plt.close()
+
+print("DONE")

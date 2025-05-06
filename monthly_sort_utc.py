@@ -62,8 +62,13 @@ for csv_orig in csv_file_list:
 
     # UTC
     for row in tqdm(range(len(frame.recno))):
+        #csv_file = pathlib.Path(
+        #    "outputs/" + "monthly-" + str(frame.loc[row]["timestamp"])[:7] + "-" + station + "-utc" + ".csv")
         csv_file = pathlib.Path(
-            "outputs/" + "monthly-" + str(frame.loc[row]["timestamp"])[:7] + "-" + station + "-utc" + ".csv")
+            "outputs/" + "monthly-" + station + "-" + str(frame.loc[row]["timestamp"])[:7] + "-utc" + ".csv")
+        #csv_file = pathlib.Path(
+        #    "outputs/" + station + "-monthly-" + str(frame.loc[row]["timestamp"])[:7] + "-utc" + ".csv")
+
         csv_file_set_utc.add(csv_file)
 
         datarow = frame.loc[row].to_frame().T
@@ -111,7 +116,7 @@ for csv_orig in csv_file_list:
             frame2['time'] = [item.replace('00:00:00', '24:00:00').replace(':', '')[:4] + 'Z' for item in frame2['time']]
 
             frame4 = frame2.pivot_table(index='time', columns='date', values='value', aggfunc='first')
-            frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-')), index_label='time')
+            frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'monthly-table-')), index_label='time')
             #frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-').replace('outputs/', 'outputs/monthly-table-utc/')))
         else:
             # del frame2["value"]
@@ -123,10 +128,10 @@ for csv_orig in csv_file_list:
             frame2['time'] = [item.replace('00:00:00', '24:00:00').replace(':', '')[:4] + 'Z' for item in frame2['time']]
 
             frame4 = frame2.pivot_table(index='time', columns='date', values='wl_data', aggfunc='first')
-            frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-')), index_label='time')
+            frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'monthly-table-')), index_label='time')
             #frame4.to_csv(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-').replace('outputs/', 'outputs/monthly-table-utc/')))
 
-        csv_file_set_utc_1.add(pathlib.Path(str(csv).replace('monthly-', 'utc-monthly-table-')))
+        csv_file_set_utc_1.add(pathlib.Path(str(csv).replace('monthly-', 'monthly-table-')))
 
 
     # UTC

@@ -82,7 +82,7 @@ for row in tqdm(frame2.index):
     if str(frame2.loc[row]["nodeid"]) in station_number.values():
 
         station_name = find_key_by_value(station_number, str(frame2.loc[row]["nodeid"]))
-        csv_file = pathlib.Path("outputs/" + station_name + "-" + str(frame2.loc[row]["logtype"]) + ".csv")
+        csv_file = pathlib.Path("outputs/" + str(frame2.loc[row]["logtype"]) + "-" + station_name + ".csv")
 
         if frame2.loc[row]["logtype"] == 'wl':
             frame2["wl_data"] = wl_datum[station_name] - frame2.loc[row]["value"]
