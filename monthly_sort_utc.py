@@ -21,6 +21,8 @@ import glob
 #warnings.filterwarnings("ignore")  # Ignores all warnings
 
 os.mkdir('outputs/monthly-table')
+os.mkdir("outputs/monthly-table/waterlevel")
+os.mkdir("outputs/monthly-table/rainfall")
 
 def list_csv_files(folder_path):
     """
@@ -48,6 +50,7 @@ print(csv_file_list)
 
 #file_path = station + '.csv'
 #data = pd.read_csv("outputs/" + file_path)
+
 for csv_orig in csv_file_list:
     station = csv_orig.replace('outputs/', '').replace('.csv', '')
 
@@ -186,9 +189,13 @@ for csv_orig in csv_file_list:
         frame6.loc['MAX'] = max_lst
         frame6.loc['MIN'] = min_lst
 
-        frame6.to_csv(csv, index_label='time')
+        #frame6.to_csv(csv, index_label='time')
         #frame6.to_csv(pathlib.Path(str(csv).replace('outputs/', 'outputs/monthly-table')), index_label='time'))
-        frame6.to_csv(pathlib.Path(str(csv).replace('outputs/', 'outputs/monthly-table/')), index_label='time')
+
+        if 'wl' in str(csv):
+            frame6.to_csv(pathlib.Path(str(csv).replace('outputs/', 'outputs/monthly-table/waterlevel/')), index_label='time')
+        else:
+            frame6.to_csv(pathlib.Path(str(csv).replace('outputs/', 'outputs/monthly-table/rainfall/')), index_label='time')
 
 print('DONE')
 

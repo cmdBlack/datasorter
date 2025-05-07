@@ -15,6 +15,8 @@ import pathlib
 #from pandas import Series, DataFrame
 from tqdm import tqdm
 from datetime import datetime
+import os
+import shutil
 
 
 station_number = {"BANTAY": "639992238167", 
@@ -55,6 +57,11 @@ frame2 = frame.copy()
 frame2["wl_data"] = 100
 frame2.drop_duplicates()
 now = datetime.now()
+
+if os.path.exists("outputs"):
+    shutil.rmtree("outputs")
+
+os.mkdir("outputs")
 
 def find_key_by_value(dictionary, target_value):
     """

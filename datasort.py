@@ -14,6 +14,8 @@ import pandas as pd
 import pathlib
 #from pandas import Series, DataFrame
 from tqdm import tqdm
+import os
+import shutil
 
 
 station_number = {"BANTAY": "639992238167", 
@@ -53,6 +55,13 @@ frame = frame.dropna()
 frame2 = frame.copy()
 frame2["wl_data"] = 100
 frame2.drop_duplicates()
+
+if os.path.exists("outputs"):
+    shutil.rmtree("outputs")
+
+os.mkdir("outputs")
+
+
 
 def find_key_by_value(dictionary, target_value):
     """
