@@ -4,9 +4,9 @@ import csv
 # Database connection parameters
 db_host = 'localhost'  # Replace with your database host
 db_user = 'root'   # Replace with your database username
-db_password = 'kpapcp' # Replace with your database password
-db_name = 'pagasa'  # Replace with your database name
-table_name = 'datalogs'  # Replace with the name of the table you want to export
+db_password = '' # Replace with your database password
+db_name = ''  # Replace with your database name
+table_name = ''  # Replace with the name of the table you want to export
 csv_file_path = 'datalogs.csv' # Replace with the desired path to save the CSV file
 
 # Establish a connection
