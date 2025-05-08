@@ -47,6 +47,8 @@ print(csv_file_list)
 
 #station = "LUBA-rr"
 
+now = datetime.now()
+print(now)
 #file_path = station + '.csv'
 #data = pd.read_csv("outputs/" + file_path)
 
@@ -60,25 +62,28 @@ for csv_orig in csv_file_list:
     frame["time"] = frame["logtime"].str.split(pat=" ",n=1,expand=True)[1]
     frame["timestamp"] = pd.to_datetime(frame["logtime"])
     frame["timestamp"] = frame["timestamp"] - pd.to_timedelta(8, unit='h')
+    frame["timestamp1"] = [item.strftime("%Y-%m") for item in frame["timestamp"]] # TODO ADDED CODE
 
     csv_file_set_utc = set()
     csv_file_set_utc_1 = set()
 
     # UTC
     for row in tqdm(range(len(frame.recno))):
-        #csv_file = pathlib.Path(
-        #    "outputs/" + "monthly-" + str(frame.loc[row]["timestamp"])[:7] + "-" + station + "-utc" + ".csv")
-        csv_file = pathlib.Path(
-            "outputs/" + "monthly-" + station + "-" + str(frame.loc[row]["timestamp"])[:7] + "-utc" + ".csv")
-        #csv_file = pathlib.Path(
-        #    "outputs/" + station + "-monthly-" + str(frame.loc[row]["timestamp"])[:7] + "-utc" + ".csv")
+        if now.strftime("%Y-%m") == frame.loc[row]['timestamp1'][:7]: # TODO ADDED CODE
+            #print(frame.loc[row]['timestamp1'][:7])
+            #csv_file = pathlib.Path(
+            #    "outputs/" + "monthly-" + str(frame.loc[row]["timestamp"])[:7] + "-" + station + "-utc" + ".csv")
+            csv_file = pathlib.Path(
+                "outputs/" + "monthly-" + station + "-" + str(frame.loc[row]["timestamp"])[:7] + "-utc" + ".csv")
+            #csv_file = pathlib.Path(
+            #    "outputs/" + station + "-monthly-" + str(frame.loc[row]["timestamp"])[:7] + "-utc" + ".csv")
 
-        csv_file_set_utc.add(csv_file)
+            csv_file_set_utc.add(csv_file)
 
-        datarow = frame.loc[row].to_frame().T
-        # datarow.to_csv(str(frame.loc[row-1]["nodeid"]) + "-" +  str(frame.loc[row-1]["logtype"]) + ".csv", mode='a', header=False)
-        datarow.to_csv(csv_file, mode='a', header=not csv_file.exists(), index=False)
-        #datarow.to_csv(pathlib.Path(str(csv_file).replace('outputs/', 'outputs/monthly/')), mode='a', header=not csv_file.exists(), index=False)
+            datarow = frame.loc[row].to_frame().T
+            # datarow.to_csv(str(frame.loc[row-1]["nodeid"]) + "-" +  str(frame.loc[row-1]["logtype"]) + ".csv", mode='a', header=False)
+            datarow.to_csv(csv_file, mode='a', header=not csv_file.exists(), index=False)
+            #datarow.to_csv(pathlib.Path(str(csv_file).replace('outputs/', 'outputs/monthly/')), mode='a', header=not csv_file.exists(), index=False)
 
     #print("DONE")
 
@@ -91,6 +96,7 @@ for csv_orig in csv_file_list:
         frame2.set_index('timestamp', inplace=True)
         frame3 = frame2.copy()
         del frame2["recno"]
+        del frame2["timestamp1"] # TODO ADDED CODE
         del frame2["nodeid"]
         del frame2["logtime"]
         del frame2["logtype"]
