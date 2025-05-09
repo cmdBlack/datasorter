@@ -19,6 +19,25 @@ def list_csv_files(folder_path):
     csv_files = glob.glob(os.path.join(folder_path, "*.csv"))
     return csv_files
 
+
+global colors
+def find_color(v):
+    global colors
+    if v > 30:
+        colors = "purple"   # torrential
+    elif 15 < v < 31:
+        colors = "red"      # intense
+    elif 7.5 < v < 16:
+        colors = "orange"   # heavy
+    elif 2.4 < v < 7.6:
+        colors = "green"    # moderate
+    elif v < 2.5:
+        colors = "blue"     # light
+    else:
+        colors = "blue"
+
+    return colors
+
 folder_path_wl = "outputs/monthly-table/waterlevel"
 folder_path_rr = "outputs/monthly-table/rainfall"
 wl_file_list = list_csv_files(folder_path_wl)
@@ -159,10 +178,6 @@ for csv in tqdm(rr_file_list):
 
     else:
         title = 'RAINFALL'
-        # alert += 0
-        # alarm += 0
-        # critical += 0
-        # title = 'SAN JULIAN WATERLEVEL'
 
     # create the figure and axes
     fig1, axes1 = plt.subplots(6, int(np.ceil(len(df.columns) / 6)), figsize=(18, 18), sharex=True, sharey=True)
@@ -170,20 +185,14 @@ for csv in tqdm(rr_file_list):
     # unpack all the axes subplots
     axe1 = axes1.ravel()
 
-    # plt.title("BANTAY WATERLEVEL")
-    # plt.ylabel("Calorie Burnage")
 
     # assign the plot to each subplot in axe
     for i, c in enumerate(df.columns):
-        # if 'wl' in csv:
-        # axe[i].plot(time_utc, alert, label=c)
-        df[c].plot(ax=axe1[i], kind='bar', color="blue")
-        # df[c].bar(ax=axe1[i])
-        # axe[i].legend(fontsize='small', loc='upper right')
+
+        colors = [find_color(v) for v in df[c]]
+        df[c].plot(ax=axe1[i], kind='bar', color=colors)
         axe1[i].legend(loc='upper center', bbox_to_anchor=(0.5, 1.15))
-        # else:
-        #   pass
-        # rr use bargraph
+
 
     plt.suptitle(title, y=0.92, fontsize='xx-large')
     # plt.xticks(ticks=df.index[::10])
