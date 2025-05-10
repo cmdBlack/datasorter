@@ -48,7 +48,7 @@ print(csv_file_list)
 #station = "LUBA-rr"
 
 #now = datetime.now()
-now = datetime.strptime("2025-05-10 08:03:00", "%Y-%m-%d %H:%M:%S")
+now = datetime.strptime("2025-04-01 08:05:00", "%Y-%m-%d %H:%M:%S")
 print(now)
 #file_path = station + '.csv'
 #data = pd.read_csv("outputs/" + file_path)
@@ -71,7 +71,8 @@ for csv_orig in csv_file_list:
     # UTC
     for row in tqdm(range(len(frame.recno))):
         if now.strftime("%d") == '01':
-            if (now - pd.to_timedelta(9, unit='h')).strftime("%Y-%m") == frame.loc[row]['timestamp1'][:7] or now.strftime("%Y-%m") == frame.loc[row]['timestamp1'][:7]:
+            #if (now - pd.to_timedelta(9, unit='h')).strftime("%Y-%m") == frame.loc[row]['timestamp1'][:7] or now.strftime("%Y-%m") == frame.loc[row]['timestamp1'][:7]:
+            if (now - pd.to_timedelta(9, unit='h')).strftime("%Y-%m") == frame.loc[row]['timestamp1'][:7]:
                 # print(frame.loc[row]['timestamp1'][:7])
                 # csv_file = pathlib.Path(
                 #    "outputs/" + "monthly-" + str(frame.loc[row]["timestamp"])[:7] + "-" + station + "-utc" + ".csv")

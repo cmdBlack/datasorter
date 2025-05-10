@@ -58,7 +58,7 @@ frame2["wl_data"] = 100
 frame2.drop_duplicates()
 #now = datetime.now()
 
-now = datetime.strptime("2025-05-10 08:03:00", "%Y-%m-%d %H:%M:%S")
+now = datetime.strptime("2025-04-01 08:03:00", "%Y-%m-%d %H:%M:%S")
 
 print(now.strftime("%d"))
 
