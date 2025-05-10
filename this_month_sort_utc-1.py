@@ -49,8 +49,8 @@ print(csv_file_list)
 
 #station = "LUBA-rr"
 
-#now = datetime.now()
-now = datetime.strptime("2025-04-01 08:05:00", "%Y-%m-%d %H:%M:%S")
+now = datetime.now()
+#now = datetime.strptime("2025-04-01 08:05:00", "%Y-%m-%d %H:%M:%S")
 print(now)
 #file_path = station + '.csv'
 #data = pd.read_csv("outputs/" + file_path)
